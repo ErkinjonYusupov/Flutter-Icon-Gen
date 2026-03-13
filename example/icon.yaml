@@ -1,0 +1,22 @@
+# Flutter Icon Generator - Namuna konfiguratsiya
+
+icon:
+  # Ikon rasm fayli yo'li (Flutter loyiha papkasidan)
+  image_path: "assets/icon.png"
+
+  # Qaysi platformalar uchun generatsiya qilish
+  platforms:
+    android: true
+    ios: true
+    web: true
+    windows: true
+    macos: true
+    linux: true
+
+  # Android ikonining nomi (ixtiyoriy, default: ic_launcher)
+  # android_icon_name: "ic_launcher"
+
+  # Android Adaptive Icon (ixtiyoriy)
+  # adaptive_icon:
+  #   foreground: "assets/icon_foreground.png"  # Ustki qatlam
+  #   background: "#FFFFFF"                      # Rang yoki rasm yo'li
