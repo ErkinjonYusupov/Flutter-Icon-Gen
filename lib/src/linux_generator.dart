@@ -11,19 +11,16 @@ class LinuxGenerator {
 
   Future<void> generate() async {
     if (!Directory(p.join(projectDir, 'linux')).existsSync()) {
-      throw Exception(
-        'linux/ papkasi topilmadi.\n'
-        'Flutter loyihasi ichida ishga tushirilganini tekshiring.',
-      );
+      throw Exception('linux/ directory not found. Make sure you are running this inside a Flutter project.');
     }
 
     final sourceBytes = File(iconPath).readAsBytesSync();
     final sourceImage = img.decodeImage(sourceBytes);
     if (sourceImage == null) {
-      throw Exception('Ikon rasm faylini o\'qib bo\'lmadi: $iconPath');
+      throw Exception('Could not read icon image: $iconPath');
     }
 
-    // Linux freedesktop.org standartiga ko'ra hicolor theme
+    // freedesktop.org hicolor theme standard
     // data/icons/hicolor/<size>x<size>/apps/
     const sizes = [16, 32, 48, 64, 128, 256, 512];
 
@@ -52,13 +49,12 @@ class LinuxGenerator {
       print('  ${size}x$size -> ${p.relative(outputPath, from: projectDir)}');
     }
 
-    // my_application.cc da ishlatiladigan asosiy ikon
     final runnerDir = p.join(projectDir, 'linux', 'runner');
     if (Directory(runnerDir).existsSync()) {
       await _savePng(sourceImage, p.join(runnerDir, 'my_application_icon.png'), 512);
     }
 
-    print('  Linux ikonlari tayyor: linux/data/icons/');
+    print('  Linux icons done: linux/data/icons/');
   }
 
   Future<void> _savePng(img.Image source, String outputPath, int size) async {

@@ -19,13 +19,13 @@ class IconGenerator {
 
     final iconFile = File(p.join(projectDir, config.imagePath));
     if (!iconFile.existsSync()) {
-      throw Exception('Ikon fayli topilmadi: ${config.imagePath}');
+      throw Exception('Icon file not found: ${config.imagePath}');
     }
 
-    print('Ikon fayli: ${config.imagePath}');
+    print('Icon: ${config.imagePath}');
 
     if (config.generateAndroid) {
-      print('\nAndroid ikonlari yaratilmoqda...');
+      print('\nGenerating Android icons...');
       await AndroidGenerator(
         projectDir: projectDir,
         iconPath: iconFile.path,
@@ -39,7 +39,7 @@ class IconGenerator {
     }
 
     if (config.generateIos) {
-      print('\niOS ikonlari yaratilmoqda...');
+      print('\nGenerating iOS icons...');
       await IosGenerator(
         projectDir: projectDir,
         iconPath: iconFile.path,
@@ -47,7 +47,7 @@ class IconGenerator {
     }
 
     if (config.generateWeb) {
-      print('\nWeb ikonlari yaratilmoqda...');
+      print('\nGenerating Web icons...');
       await WebGenerator(
         projectDir: projectDir,
         iconPath: iconFile.path,
@@ -55,7 +55,7 @@ class IconGenerator {
     }
 
     if (config.generateWindows) {
-      print('\nWindows ikonlari yaratilmoqda...');
+      print('\nGenerating Windows icons...');
       await WindowsGenerator(
         projectDir: projectDir,
         iconPath: iconFile.path,
@@ -63,7 +63,7 @@ class IconGenerator {
     }
 
     if (config.generateMacos) {
-      print('\nmacOS ikonlari yaratilmoqda...');
+      print('\nGenerating macOS icons...');
       await MacosGenerator(
         projectDir: projectDir,
         iconPath: iconFile.path,
@@ -71,7 +71,7 @@ class IconGenerator {
     }
 
     if (config.generateLinux) {
-      print('\nLinux ikonlari yaratilmoqda...');
+      print('\nGenerating Linux icons...');
       await LinuxGenerator(
         projectDir: projectDir,
         iconPath: iconFile.path,

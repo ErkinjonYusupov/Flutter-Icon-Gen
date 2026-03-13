@@ -1,6 +1,6 @@
 name: flutter_icon_gen
 description: A CLI tool that generates launcher icons for all Flutter platforms from a single image using icon.yaml config.
-version: 0.1.2
+version: 1.0.0
 homepage: https://github.com/ErkinjonYusupov/Flutter-Icon-Gen
 
 topics:

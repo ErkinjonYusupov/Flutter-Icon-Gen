@@ -45,10 +45,7 @@ class MacosGenerator {
     );
 
     if (!Directory(p.join(projectDir, 'macos')).existsSync()) {
-      throw Exception(
-        'macos/ papkasi topilmadi.\n'
-        'Flutter loyihasi ichida ishga tushirilganini tekshiring.',
-      );
+      throw Exception('macos/ directory not found. Make sure you are running this inside a Flutter project.');
     }
 
     Directory(iconsetDir).createSync(recursive: true);
@@ -56,7 +53,7 @@ class MacosGenerator {
     final sourceBytes = File(iconPath).readAsBytesSync();
     final sourceImage = img.decodeImage(sourceBytes);
     if (sourceImage == null) {
-      throw Exception('Ikon rasm faylini o\'qib bo\'lmadi: $iconPath');
+      throw Exception('Could not read icon image: $iconPath');
     }
 
     final contentsImages = <Map<String, String>>[];
@@ -83,7 +80,6 @@ class MacosGenerator {
       });
     }
 
-    // Contents.json
     final contents = {
       'images': contentsImages,
       'info': {'version': 1, 'author': 'flutter_icon_gen'},
@@ -93,6 +89,6 @@ class MacosGenerator {
       const JsonEncoder.withIndent('  ').convert(contents),
     );
 
-    print('  macOS ikonlari tayyor: macos/Runner/Assets.xcassets/AppIcon.appiconset/');
+    print('  macOS icons done: macos/Runner/Assets.xcassets/AppIcon.appiconset/');
   }
 }

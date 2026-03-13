@@ -4,25 +4,25 @@ import 'package:flutter_icon_gen/flutter_icon_gen.dart';
 
 void main(List<String> arguments) async {
   final parser = ArgParser()
-    ..addOption('config', abbr: 'c', defaultsTo: 'icon.yaml', help: 'Konfigurasiya fayli (default: icon.yaml)')
-    ..addFlag('help', abbr: 'h', negatable: false, help: 'Yordam');
+    ..addOption('config', abbr: 'c', defaultsTo: 'icon.yaml', help: 'Config file path (default: icon.yaml)')
+    ..addFlag('help', abbr: 'h', negatable: false, help: 'Show help');
 
   ArgResults args;
   try {
     args = parser.parse(arguments);
   } catch (e) {
-    print('Xato: $e');
+    print('Error: $e');
     print(parser.usage);
     exit(1);
   }
 
   if (args['help'] as bool) {
-    print('flutter_icon_gen - Flutter launcher ikonlar generatori\n');
-    print('Ishlatilishi:');
+    print('flutter_icon_gen - Flutter launcher icon generator\n');
+    print('Usage:');
     print('  dart run flutter_icon_gen [-c icon.yaml]\n');
-    print('Parametrlar:');
+    print('Options:');
     print(parser.usage);
-    print('\nicon.yaml namunasi:');
+    print('\nExample icon.yaml:');
     print('''
 icon:
   image_path: "assets/icon.png"
@@ -37,9 +37,9 @@ icon:
 
   final configFile = File(configPath);
   if (!configFile.existsSync()) {
-    print('Xato: "$configPath" fayli topilmadi.');
-    print('Flutter loyiha papkasida icon.yaml fayli yarating.\n');
-    print('Namuna icon.yaml:');
+    print('Error: "$configPath" not found.');
+    print('Create an icon.yaml file in your Flutter project root.\n');
+    print('Example icon.yaml:');
     print('''
 icon:
   image_path: "assets/icon.png"
@@ -50,15 +50,15 @@ icon:
     exit(1);
   }
 
-  print('flutter_icon_gen ishga tushmoqda...');
-  print('Konfigurasiya: $configPath\n');
+  print('flutter_icon_gen starting...');
+  print('Config: $configPath\n');
 
   try {
     final generator = IconGenerator(configPath: configPath);
     await generator.generate();
-    print('\nBarcha ikonlar muvaffaqiyatli yaratildi!');
+    print('\nAll icons generated successfully!');
   } catch (e) {
-    print('\nXato yuz berdi: $e');
+    print('\nError: $e');
     exit(1);
   }
 }

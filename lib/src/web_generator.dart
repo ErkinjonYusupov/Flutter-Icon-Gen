@@ -13,22 +13,17 @@ class WebGenerator {
   Future<void> generate() async {
     final webDir = p.join(projectDir, 'web');
     if (!Directory(webDir).existsSync()) {
-      throw Exception(
-        'web/ papkasi topilmadi.\n'
-        'Flutter loyihasi ichida ishga tushirilganini tekshiring.',
-      );
+      throw Exception('web/ directory not found. Make sure you are running this inside a Flutter project.');
     }
 
     final sourceBytes = File(iconPath).readAsBytesSync();
     final sourceImage = img.decodeImage(sourceBytes);
     if (sourceImage == null) {
-      throw Exception('Ikon rasm faylini o\'qib bo\'lmadi: $iconPath');
+      throw Exception('Could not read icon image: $iconPath');
     }
 
-    // favicon.png (32x32)
     await _save(sourceImage, p.join(webDir, 'favicon.png'), 32);
 
-    // icons/ papkasi
     final iconsDir = p.join(webDir, 'icons');
     Directory(iconsDir).createSync(recursive: true);
 
@@ -37,10 +32,9 @@ class WebGenerator {
     await _save(sourceImage, p.join(iconsDir, 'Icon-maskable-192.png'), 192);
     await _save(sourceImage, p.join(iconsDir, 'Icon-maskable-512.png'), 512);
 
-    // manifest.json yangilash
     _updateManifest(webDir);
 
-    print('  Web ikonlari tayyor: web/');
+    print('  Web icons done: web/');
   }
 
   Future<void> _save(img.Image source, String outputPath, int size) async {
@@ -80,9 +74,9 @@ class WebGenerator {
       manifestFile.writeAsStringSync(
         const JsonEncoder.withIndent('  ').convert(content),
       );
-      print('  manifest.json yangilandi');
+      print('  manifest.json updated');
     } catch (_) {
-      // manifest.json o'qib bo'lmasa, o'tkazib yuborish
+      // skip if manifest.json cannot be parsed
     }
   }
 }

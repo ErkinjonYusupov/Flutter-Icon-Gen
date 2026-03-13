@@ -65,20 +65,16 @@ class IosGenerator {
       'AppIcon.appiconset',
     );
 
-    final outputDir = Directory(iconsetDir);
     if (!Directory(p.join(projectDir, 'ios')).existsSync()) {
-      throw Exception(
-        'iOS papkasi topilmadi: ${p.join(projectDir, "ios")}\n'
-        'Flutter loyihasi ichida ishga tushirilganini tekshiring.',
-      );
+      throw Exception('ios/ directory not found. Make sure you are running this inside a Flutter project.');
     }
 
-    outputDir.createSync(recursive: true);
+    Directory(iconsetDir).createSync(recursive: true);
 
     final sourceBytes = File(iconPath).readAsBytesSync();
     final sourceImage = img.decodeImage(sourceBytes);
     if (sourceImage == null) {
-      throw Exception('Ikon rasm faylini o\'qib bo\'lmadi: $iconPath');
+      throw Exception('Could not read icon image: $iconPath');
     }
 
     final contentsImages = <Map<String, String>>[];
@@ -111,7 +107,6 @@ class IosGenerator {
       });
     }
 
-    // Contents.json yozish
     final contents = {
       'images': contentsImages,
       'info': {'version': 1, 'author': 'flutter_icon_gen'},
@@ -122,6 +117,6 @@ class IosGenerator {
       const JsonEncoder.withIndent('  ').convert(contents),
     );
 
-    print('  iOS ikonlari tayyor: ios/Runner/Assets.xcassets/AppIcon.appiconset/');
+    print('  iOS icons done: ios/Runner/Assets.xcassets/AppIcon.appiconset/');
   }
 }

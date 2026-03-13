@@ -17,7 +17,7 @@ const _standardSizes = [
   AndroidIconSize('mipmap-xxxhdpi', 192),
 ];
 
-// Adaptive icon uchun foreground o'lchami (faqat markaziy qism ko'rinadi)
+// Adaptive icon foreground sizes (only the center area is visible)
 const _adaptiveSizes = [
   AndroidIconSize('mipmap-mdpi', 108),
   AndroidIconSize('mipmap-hdpi', 162),
@@ -48,19 +48,15 @@ class AndroidGenerator {
     final resDirectory = Directory(resDir);
 
     if (!resDirectory.existsSync()) {
-      throw Exception(
-        'Android res papkasi topilmadi: $resDir\n'
-        'Flutter loyihasi ichida ishga tushirilganini tekshiring.',
-      );
+      throw Exception('android/app/src/main/res not found. Make sure you are running this inside a Flutter project.');
     }
 
     final sourceBytes = File(iconPath).readAsBytesSync();
     final sourceImage = img.decodeImage(sourceBytes);
     if (sourceImage == null) {
-      throw Exception('Ikon rasm faylini o\'qib bo\'lmadi: $iconPath');
+      throw Exception('Could not read icon image: $iconPath');
     }
 
-    // Oddiy ikonlar
     for (final size in _standardSizes) {
       await _generateIcon(
         sourceImage: sourceImage,
@@ -74,14 +70,13 @@ class AndroidGenerator {
       await _generateAdaptiveIcons(resDir, sourceImage);
     }
 
-    print('  Android ikonlari tayyor: $resDir');
+    print('  Android icons done: $resDir');
   }
 
   Future<void> _generateAdaptiveIcons(
     String resDir,
     img.Image defaultImage,
   ) async {
-    // Foreground image
     img.Image? foregroundImage;
     if (adaptiveForegroundPath != null) {
       final fgBytes = File(adaptiveForegroundPath!).readAsBytesSync();
@@ -98,16 +93,13 @@ class AndroidGenerator {
       );
     }
 
-    // Adaptive icon XML (mipmap-anydpi-v26)
     final anydpiDir = Directory(p.join(resDir, 'mipmap-anydpi-v26'));
     anydpiDir.createSync(recursive: true);
 
     final bgColor = adaptiveBackground ?? '#FFFFFF';
     final isColor = bgColor.startsWith('#');
 
-    // Background resource
     if (isColor) {
-      // color resource yozish
       final valuesDir = Directory(p.join(resDir, 'values'));
       valuesDir.createSync(recursive: true);
       final colorFile = File(p.join(valuesDir.path, 'ic_launcher_background.xml'));
@@ -117,7 +109,6 @@ class AndroidGenerator {
 </resources>
 ''');
     } else {
-      // background rasm sifatida
       final bgBytes = File(p.join(projectDir, bgColor)).readAsBytesSync();
       final bgImage = img.decodeImage(bgBytes);
       if (bgImage != null) {
@@ -132,7 +123,6 @@ class AndroidGenerator {
       }
     }
 
-    // ic_launcher.xml
     final bgResource = isColor
         ? '@color/${iconName}_background'
         : '@mipmap/${iconName}_background';
@@ -146,7 +136,6 @@ class AndroidGenerator {
 ''',
     );
 
-    // ic_launcher_round.xml
     File(p.join(anydpiDir.path, '${iconName}_round.xml')).writeAsStringSync(
       '''<?xml version="1.0" encoding="utf-8"?>
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">

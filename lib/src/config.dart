@@ -31,7 +31,7 @@ class IconConfig {
   factory IconConfig.fromFile(String configPath) {
     final file = File(configPath);
     if (!file.existsSync()) {
-      throw Exception('Konfigurasiya fayli topilmadi: $configPath');
+      throw Exception('Config file not found: $configPath');
     }
 
     final content = file.readAsStringSync();
@@ -39,12 +39,12 @@ class IconConfig {
 
     final iconSection = yaml['icon'];
     if (iconSection == null) {
-      throw Exception('icon.yaml faylida "icon:" bo\'limi topilmadi');
+      throw Exception('"icon:" section not found in icon.yaml');
     }
 
     final imagePath = iconSection['image_path'] as String?;
     if (imagePath == null || imagePath.isEmpty) {
-      throw Exception('"image_path" ko\'rsatilmagan');
+      throw Exception('"image_path" is required');
     }
 
     final platforms = iconSection['platforms'] as YamlMap?;

@@ -12,10 +12,7 @@ class WindowsGenerator {
   Future<void> generate() async {
     final resourcesDir = p.join(projectDir, 'windows', 'runner', 'resources');
     if (!Directory(p.join(projectDir, 'windows')).existsSync()) {
-      throw Exception(
-        'windows/ papkasi topilmadi.\n'
-        'Flutter loyihasi ichida ishga tushirilganini tekshiring.',
-      );
+      throw Exception('windows/ directory not found. Make sure you are running this inside a Flutter project.');
     }
 
     Directory(resourcesDir).createSync(recursive: true);
@@ -23,10 +20,10 @@ class WindowsGenerator {
     final sourceBytes = File(iconPath).readAsBytesSync();
     final sourceImage = img.decodeImage(sourceBytes);
     if (sourceImage == null) {
-      throw Exception('Ikon rasm faylini o\'qib bo\'lmadi: $iconPath');
+      throw Exception('Could not read icon image: $iconPath');
     }
 
-    // ICO fayl: 16, 32, 48, 64, 128, 256 px
+    // ICO file: 16, 32, 48, 64, 128, 256 px
     const sizes = [16, 32, 48, 64, 128, 256];
     final frames = <img.Image>[];
 
@@ -41,23 +38,20 @@ class WindowsGenerator {
       print('  ${size}x$size (ICO frame)');
     }
 
-    // ICO encoding
+    // ICO encoder only accepts a single frame — saving the largest (256x256)
     final icoBytes = img.encodeIco(img.Image.fromBytes(
       width: frames.last.width,
       height: frames.last.height,
       bytes: frames.last.toUint8List().buffer,
     ));
 
-    // image package ICO encoder faqat bitta frame qabul qiladi,
-    // shuning uchun eng katta o'lchamni saqlaymiz (256x256)
     final outputPath = p.join(resourcesDir, 'app_icon.ico');
     File(outputPath).writeAsBytesSync(Uint8List.fromList(icoBytes));
     print('  ICO -> ${p.relative(outputPath, from: projectDir)}');
 
-    // Qo'shimcha PNG (ba'zi joylarda kerak bo'ladi)
     await _savePng(sourceImage, p.join(resourcesDir, 'app_icon.png'), 256);
 
-    print('  Windows ikonlari tayyor: windows/runner/resources/');
+    print('  Windows icons done: windows/runner/resources/');
   }
 
   Future<void> _savePng(img.Image source, String outputPath, int size) async {
